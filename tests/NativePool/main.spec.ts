@@ -55,9 +55,9 @@ describe("onda-nativePool tests", async () => {
                                 .storeUint(0x186a1, 32)
                                 .storeUint(0, 64)
                         .endCell()
-                        var body = await packOracleResponse(user.address, 10*10**9, 2.45*10**9, origBody);
-                        var result = await ondaContract.sendAction(oracle.getSender(), body);
-                        var res = flattenTransaction(result.transactions[1]);
+                        var body = await packOracleResponse(user.address, 10*10**9, 2.45*10**9, origBody); // fake oracle response
+                        var result = await ondaContract.sendAction(oracle.getSender(), body); // send fake oracle response to ondaContract
+                        var res = flattenTransaction(result.transactions[1]); // tx format
                         expect(res.exitCode).to.equal(0)
                         expect(res.aborted).to.equal(false)
                 })
@@ -70,7 +70,7 @@ describe("onda-nativePool tests", async () => {
 
                 it("onda-nativePool newBorrow using native token",async () => {
                         const origBody = beginCell()
-                                .storeUint(0x186a0, 32)
+                                .storeUint(0x186a0, 32) // newBorrow()
                                 .storeUint(0, 64)
                         .endCell()
                         var body = await packOracleResponse(user.address, 1*10**9, 2.45*10**9, origBody);
