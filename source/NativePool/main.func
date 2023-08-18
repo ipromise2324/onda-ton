@@ -47,7 +47,7 @@
 			return ();
 		}
 		if (op == op::newLendNativeToken()) {
-			lend::newLendNativeToken(all_msg, who_send, value);
+			lend::newLendNativeToken(all_msg, who_send, value); ;;value 為想要deposit的TON數量
 			return ();
 		}
 		if (op == op::newBorrow()) { 

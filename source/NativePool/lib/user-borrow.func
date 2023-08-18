@@ -42,7 +42,7 @@
                 cell body = begin_cell()
                         .store_uint(op::transfer(), 32)
                         .store_uint(0, 64)
-                        .store_grams(borrow_amount)
+                        .store_grams(borrow_amount) ;; 利用store_grams来存borrow_amount
                         .store_slice(sender_address)
                         .store_slice(utils::null_addr())
                         .store_dict(new_dict())
@@ -51,7 +51,7 @@
                 var msg = begin_cell()
                         .store_uint(0x18, 6)
                         .store_slice(jetton_wallet_x_address)
-                        .store_grams(0)
+                        .store_grams(0) ;; 因為是借token 所以沒有傳TON
                         .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
                         .store_ref(body)
                 .end_cell();

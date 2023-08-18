@@ -3,7 +3,7 @@
         int input_amount = in_msg_body~load_grams();
         slice to_address = in_msg_body~load_msg_addr();
         var (_, key_addr) = parse_std_addr(to_address);
-        throw_if(0x53, check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr)));
+        throw_if(0x53, check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr))); ;;如果他是有value,check_slice_for_empty?會return true，沒東西的話會return -1，因此空的話，return -1->不會throw error => 空的話才可以lend，不可以重複lend
 
         {- in future -}
         {-if(check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr))){
@@ -59,7 +59,7 @@
 () lend::newLendNativeToken(slice in_msg_body, slice sender_address, int msg_value) impure {
         (slice owner_address, slice jetton_wallet_x_address, slice minter_otoken_address, slice jetton_wallet_otoken_address, slice oracle, cell borrow, cell lend, cell algebra) = storage::load_data();
         var (_, key_addr) = parse_std_addr(sender_address);
-        throw_if(0x53, check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr)));
+        throw_if(0x53, check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr))); ;;空的會return true 有東西的話return false->throw 0x53 eixt code
 
         {- in future -}
         {-if(check_slice_for_empty?(lend.udict_get_maybe_ref(256, key_addr))){
@@ -81,7 +81,7 @@
         cell body = begin_cell()
                 .store_uint(op::transfer(), 32)
                 .store_uint(0, 64)
-                .store_grams(msg_value)
+                .store_grams(msg_value) ;; ton coin
                 .store_slice(sender_address)
                 .store_slice(utils::null_addr())
                 .store_dict(new_dict())

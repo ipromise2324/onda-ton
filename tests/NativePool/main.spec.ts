@@ -52,20 +52,21 @@ describe("onda-nativePool tests", async () => {
                 });
                 it("onda-nativePool newLendNativeToken",async () => {
                         const origBody = beginCell()
-                                .storeUint(0x186a1, 32)
+                                .storeUint(0x186a1, 32) // newLendNativeToken
                                 .storeUint(0, 64)
                         .endCell()
                         var body = await packOracleResponse(user.address, 10*10**9, 2.45*10**9, origBody); // fake oracle response
                         var result = await ondaContract.sendAction(oracle.getSender(), body); // send fake oracle response to ondaContract
                         var res = flattenTransaction(result.transactions[1]); // tx format
                         expect(res.exitCode).to.equal(0)
-                        expect(res.aborted).to.equal(false)
+                        expect(res.aborted).to.equal(false) // false means tx success
                 })
 
                 it("onda-nativePool check lend info",async () => {
+                        // check deposit多少
                         let data = await ondaContract.getLendInfo(user.address);
                         var res = await ondaContract.parseLendSlice(data);
-                        //console.log(res);
+                        console.log(res);
                 });
 
                 it("onda-nativePool newBorrow using native token",async () => {
@@ -73,7 +74,7 @@ describe("onda-nativePool tests", async () => {
                                 .storeUint(0x186a0, 32) // newBorrow()
                                 .storeUint(0, 64)
                         .endCell()
-                        var body = await packOracleResponse(user.address, 1*10**9, 2.45*10**9, origBody);
+                        var body = await packOracleResponse(user.address, 1*10**9, 2.45*10**9, origBody); // who_send: Address, value: number, price: number, body: Cell
                         var result = await ondaContract.sendAction(oracle.getSender(), body);
                         var res = flattenTransaction(result.transactions[1]);
                         expect(res.exitCode).to.equal(0)
@@ -83,12 +84,12 @@ describe("onda-nativePool tests", async () => {
                 it("onda-nativePool check borrow info",async () => {
                         let data = await ondaContract.getBorrowInfo(user.address);
                         var res = await ondaContract.parseBorrowSlice(data);
-                        //console.log(res);
+                        console.log(res);
                 });
 
                 it("onda-nativePool trying withdraw when borrow not end", async () => {
                         const origBody = beginCell()
-                                .storeUint(0x7362d09c, 32)
+                                .storeUint(0x7362d09c, 32) // transfer_notification
                                 .storeUint(0x15f90, 64)
                                 .storeCoins(10000000000)
                                 .storeAddress(user.address)
@@ -97,12 +98,12 @@ describe("onda-nativePool tests", async () => {
                         var result = await ondaContract.sendAction(oracle.getSender(), body);
                         var res = flattenTransaction(result.transactions[1]);
                         expect(res.exitCode).to.equal(7006)
-                        expect(res.aborted).to.equal(true)
+                        expect(res.aborted).to.equal(true) // true means tx false
                 });
 
                 it("onda-nativePool trying newLendNativeToken when user alredy lend",async () => {
                         const origBody = beginCell()
-                                .storeUint(0x186a1, 32)
+                                .storeUint(0x186a1, 32) //newLendNativeToken
                                 .storeUint(0, 64)
                         .endCell()
                         var body = await packOracleResponse(user.address, 10*10**9, 2.40*10**9, origBody);
@@ -114,8 +115,8 @@ describe("onda-nativePool tests", async () => {
 
                 it("onda-nativePool deleteBorrowCustomToken when hf < 100",async () => {
                         const origBody = beginCell()
-                                .storeUint(0x7362d09c, 32)
-                                .storeUint(0x1adb0, 64)
+                                .storeUint(0x7362d09c, 32) // transfer_notification
+                                .storeUint(0x1adb0, 64) // deleteBorrowCustomToken
                                 .storeCoins(18375000000)
                                 .storeAddress(user.address)
                         .endCell()
@@ -134,9 +135,9 @@ describe("onda-nativePool tests", async () => {
                 });                
                 it("onda-nativePool deleteBorrowCustomToken when hf > 100",async () => {
                         const origBody = beginCell()
-                                .storeUint(0x7362d09c, 32)
-                                .storeUint(0x1adb0, 64)
-                                .storeCoins(18375001891)
+                                .storeUint(0x7362d09c, 32) // transfer_notification
+                                .storeUint(0x1adb0, 64) // deleteBorrowCustomToken
+                                .storeCoins(18375001891) 
                                 .storeAddress(user.address)
                         .endCell()
                         var body = await packOracleResponse(jetton_wallet_x_address.address, 1*10**9, 2.45*10**9, origBody);
